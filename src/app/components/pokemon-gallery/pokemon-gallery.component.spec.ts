@@ -93,6 +93,7 @@ describe('PokemonGalleryComponent', () => {
     });
     const input = fixture.debugElement.query(By.css('#name-filter'));
     input.triggerEventHandler('keyup', event);
+    expect(component.filteredValues['name']).toEqual('');
   });
 
   it('should call getPokemonDetails', () => {
@@ -180,5 +181,26 @@ describe('PokemonGalleryComponent', () => {
     expect(router.navigate).toHaveBeenCalledWith(['/detail'], {
       queryParams: { id: POKEMON_MOCKS_INDEXSEC?.id },
     });
+  });
+
+  it('should click any options', () => {
+    const select = fixture.debugElement.query(
+      By.css('mat-select')
+    ).nativeElement;
+    select.click();
+    fixture.detectChanges();
+    const selectOptions = fixture.debugElement.queryAll(By.css('mat-option'));
+    selectOptions[2].nativeElement.click();
+    fixture.detectChanges();
+  });
+
+  it('check the length of drop down', async () => {
+    const matOptions =
+      fixture.debugElement.nativeElement.querySelectorAll('mat-option');
+    fixture.detectChanges();
+    expect(matOptions.length).toEqual(3);
+    expect(matOptions[0].innerText.trim()).toEqual('Name');
+    expect(matOptions[1].innerText.trim()).toEqual('Height');
+    expect(matOptions[2].innerText.trim()).toEqual('Weight');
   });
 });

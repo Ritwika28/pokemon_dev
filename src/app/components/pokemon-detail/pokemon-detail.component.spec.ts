@@ -46,9 +46,8 @@ describe('PokemonDetailComponent', () => {
   it('should call get to home', () => {
     spyOn(router, 'navigate');
     let comp = spyOn(component, 'getToHome');
-    const el = fixture.debugElement
-      .query(By.css('#get-home'))
-      .nativeElement.click();
+    let button = fixture.debugElement.nativeElement.querySelector('button');
+    button.click();
     expect(comp).toHaveBeenCalled();
     expect(router.navigate).toHaveBeenCalled;
   });
