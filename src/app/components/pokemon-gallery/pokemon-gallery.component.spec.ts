@@ -12,6 +12,7 @@ import {
   POKEMON_ARR,
 } from '../../shared/pokemon.mock';
 import { By } from '@angular/platform-browser';
+import { MatCardModule } from '@angular/material/card';
 describe('PokemonGalleryComponent', () => {
   let component: PokemonGalleryComponent;
   let fixture: ComponentFixture<PokemonGalleryComponent>;
@@ -40,7 +41,7 @@ describe('PokemonGalleryComponent', () => {
     spyOn(localStorage, 'setItem').and.callFake(mockLocalStorage.setItem);
 
     await TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, RouterTestingModule],
+      imports: [HttpClientTestingModule, RouterTestingModule, MatCardModule],
       declarations: [PokemonGalleryComponent],
     }).compileComponents();
     service = TestBed.inject(PokemonService);
@@ -202,5 +203,6 @@ describe('PokemonGalleryComponent', () => {
     expect(matOptions[0].innerText.trim()).toEqual('Name');
     expect(matOptions[1].innerText.trim()).toEqual('Height');
     expect(matOptions[2].innerText.trim()).toEqual('Weight');
+    matOptions[0].click();
   });
 });

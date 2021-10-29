@@ -43,18 +43,19 @@
       <mat-chip color="primary" selected
         >Exp: {{ pokeDetail?.base_experience }}</mat-chip
       >
-      <mat-chip color="primary" selected
-        >Abilities:
-        <span *ngFor="let abilities of pokeDetail?.abilities; let iLast = last">
-          {{ abilities?.ability?.name }}{{ iLast ? "" : ", " }}
-        </span></mat-chip
-      >
-      <mat-chip color="primary" selected
-        >Strategy:
-        <span *ngFor="let stats of pokeDetail?.stats; let iLast = last">
-          {{ stats?.stat?.name }}{{ iLast ? "" : ", " }}
-        </span></mat-chip
-      >
     </mat-chip-list>
+    <hr />
+    <div>
+      <span class="mat-colore-bold">Abilities:</span>
+      <span *ngFor="let abilities of pokeDetail?.abilities; let iLast = last">
+        {{ abilities?.ability?.name }}{{ iLast ? "" : ", " }}
+      </span>
+    </div>
+    <div>
+      <span class="mat-colore-bold">Strategy:</span>
+      <span *ngFor="let stats of pokeDetail?.stats; let iLast = last">
+        {{ stats?.stat?.name }}{{ iLast ? "" : ", " }}
+      </span>
+    </div>
   </mat-card-content>
 </mat-card>

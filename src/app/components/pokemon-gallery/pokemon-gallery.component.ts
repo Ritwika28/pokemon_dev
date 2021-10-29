@@ -75,6 +75,8 @@ export class PokemonGalleryComponent implements OnInit {
       this.dataSource.paginator = this.paginator;
       if (this.namefStore || this.abilityfStore || this.selectedValue) {
         this.filterDataPresent();
+      } else if (!this.namefStore && !this.abilityfStore) {
+        this.dataSource.data = this.cardsData;
       }
     } else {
       this.loader = true;
