@@ -44,6 +44,10 @@ export class PokemonGalleryComponent implements OnInit {
   };
   loader: boolean = false;
   selectedValue!: string;
+  namefStore!: string;
+  sortfStore!: string;
+  abilityfStore!: string;
+
   @ViewChild(MatSort) sort!: MatSort;
   @ViewChild(MatSort, { static: false }) matSort!: MatSort;
 
@@ -61,38 +65,19 @@ export class PokemonGalleryComponent implements OnInit {
 
   ngOnInit() {
     this.changeDetectorRef.detectChanges();
-
     this.cardsData = JSON.parse(localStorage.getItem('cardData') || '[]');
-    let namef = localStorage.getItem('nameFilter') || '';
-    let abilityf = localStorage.getItem('abilitiesFilter') || '';
+    this.namefStore = localStorage.getItem('nameFilter') || '';
+    this.abilityfStore = localStorage.getItem('abilitiesFilter') || '';
     this.selectedValue = localStorage.getItem('selectev') || '';
-    if (this.cardsData.length > 0 && (namef || abilityf)) {
+    if (this.cardsData.length > 0) {
       this.dataSource = new MatTableDataSource<any>(this.cardsData);
       this.obs = this.dataSource.connect();
       this.dataSource.paginator = this.paginator;
-      this.nameFilter?.setValue(namef);
-      this.abilitiesFilter?.setValue(abilityf);
-      this.dataSource.data = this.dataSource.data
-        .filter((a) => {
-          let result = this.getabilities(a);
-
-          if (
-            JSON.stringify(result)
-              .trim()
-              .toLowerCase()
-              .indexOf(abilityf?.toLowerCase()) !== -1 &&
-            a.name
-              .toString()
-              .trim()
-              .toLowerCase()
-              .indexOf(namef?.toLowerCase()) !== -1
-          ) {
-            return a;
-          }
-        })
-        .sort((a: any, b: any) => {
-          return this.getSort(a, b, this.selectedValue);
-        });
+      if (this.namefStore || this.abilityfStore || this.selectedValue) {
+        this.filterDataPresent();
+      } else if (!this.namefStore && !this.abilityfStore) {
+        this.dataSource.data = this.cardsData;
+      }
     } else {
       this.loader = true;
       this.getPokemonList();
@@ -102,11 +87,37 @@ export class PokemonGalleryComponent implements OnInit {
     this.abilityvaluechanges();
   }
 
+  filterDataPresent() {
+    this.nameFilter?.setValue(this.namefStore);
+    this.abilitiesFilter?.setValue(this.abilityfStore);
+    this.dataSource.data = this.dataSource.data
+      .filter((a) => {
+        let result = this.getabilities(a);
+
+        if (
+          JSON.stringify(result)
+            .trim()
+            .toLowerCase()
+            .indexOf(this.abilityfStore?.toLowerCase()) !== -1 &&
+          a.name
+            .toString()
+            .trim()
+            .toLowerCase()
+            .indexOf(this.namefStore?.toLowerCase()) !== -1
+        ) {
+          return a;
+        }
+      })
+      .sort((a: any, b: any) => {
+        return this.getSort(a, b, this.selectedValue);
+      });
+  }
+
   namevaluechange() {
     this.nameFilter.valueChanges.subscribe((nameFilterValue) => {
       localStorage.setItem('nameFilter', nameFilterValue);
       this.filteredValues['name'] = nameFilterValue;
-      if (localStorage.getItem('abilitiesFilter')) {
+      if (this.abilityfStore) {
         this.filteredValues['abilities'] = this.abilitiesFilter?.value;
       }
       this.newPrdiction();
@@ -117,7 +128,7 @@ export class PokemonGalleryComponent implements OnInit {
     this.abilitiesFilter.valueChanges.subscribe((abilitiesFilterValue) => {
       localStorage.setItem('abilitiesFilter', abilitiesFilterValue);
       this.filteredValues['abilities'] = abilitiesFilterValue;
-      if (localStorage.getItem('nameFilter')) {
+      if (this.namefStore) {
         this.filteredValues['name'] = this.nameFilter?.value;
       }
       this.newPrdiction();
@@ -131,7 +142,7 @@ export class PokemonGalleryComponent implements OnInit {
     this.dataSource.filter = JSON.stringify(this.filteredValues);
   }
 
-  private getPokemonList() {
+  getPokemonList() {
     this.pokemonService.getPokemonsTotal().subscribe((res: any) => {
       this.totalCount = res.count;
       this.pokemonService.getListOfPokemon(this.totalCount).subscribe(
@@ -145,7 +156,7 @@ export class PokemonGalleryComponent implements OnInit {
     });
   }
 
-  private getPokemonDetails(urlList: Array<any>) {
+  getPokemonDetails(urlList: Array<any>) {
     this.pokemonService.getPokemonDetails(urlList).subscribe(
       (response) => {
         this.pokemonData = response.map(function (value: any, index, array) {
@@ -228,7 +239,6 @@ export class PokemonGalleryComponent implements OnInit {
   }
 
   getToDetails(cardDetail: any) {
-    //this.router.navigateByUrl(`detail/${cardDetail.id}`);
     this.router.navigate(['/detail'], {
       queryParams: { id: cardDetail.id },
     });

@@ -1,13 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { PokemonDetailComponent } from './pokemon-detail.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { PokemonService } from '../../services/pokemon.service';
 import { Observable, of } from 'rxjs';
+import { By } from '@angular/platform-browser';
+import {
+  POKEMON_MOCKS_INDEX,
+  POKEMON_MOCKS_INDEXSEC,
+} from '../../shared/pokemon.mock';
 describe('PokemonDetailComponent', () => {
   let component: PokemonDetailComponent;
   let fixture: ComponentFixture<PokemonDetailComponent>;
+  let router: any;
   const mockRoute: any = {
     snapshot: {
       data: {
@@ -17,54 +23,14 @@ describe('PokemonDetailComponent', () => {
   };
 
   let service: PokemonService;
-  let mockData: any = {
-    abilities: [],
-    base_experience: 62,
-    forms: [],
-    game_indices: [],
-    height: 1,
-    held_items: [],
-    id: 854,
-    is_default: true,
-    location_area_encounters:
-      'https://pokeapi.co/api/v2/pokemon/854/encounters',
-    moves: [],
-    name: 'sinistea',
-    order: -1,
-    past_types: [],
-    species: {
-      name: 'sinistea',
-      url: 'https://pokeapi.co/api/v2/pokemon-species/854/',
-    },
-    sprites: {
-      other: {
-        'official-artwork': {
-          front_default:
-            'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/854.png',
-        },
-      },
-    },
-    stats: [],
-    types: [],
-    weight: 2,
-  };
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [HttpClientTestingModule, RouterTestingModule],
       declarations: [PokemonDetailComponent],
-      providers: [
-        {
-          provide: ActivatedRoute,
-          useValue: {
-            provide: ActivatedRoute,
-            useValue: {
-              params: of({ id: 123 }),
-            },
-          },
-        },
-      ],
+      providers: [],
     }).compileComponents();
     service = TestBed.inject(PokemonService);
+    router = TestBed.get(Router);
   });
 
   beforeEach(() => {
@@ -75,5 +41,25 @@ describe('PokemonDetailComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should call get to home', () => {
+    spyOn(router, 'navigate');
+    let comp = spyOn(component, 'getToHome');
+    let button = fixture.debugElement.nativeElement.querySelector('button');
+    button.click();
+    expect(comp).toHaveBeenCalled();
+    expect(router.navigate).toHaveBeenCalled;
+  });
+
+  it('should call getPokemonListDetail', () => {
+    service.getPokemonListDetail(1).subscribe((data) => {
+      expect(data).toBe(POKEMON_MOCKS_INDEX);
+      expect(component.pokeDetail).toEqual(data);
+    });
+    service.getPokemonListDetail(2).subscribe((data) => {
+      expect(data).toBe(POKEMON_MOCKS_INDEXSEC);
+      expect(component.pokeDetail).toEqual(data);
+    });
   });
 });

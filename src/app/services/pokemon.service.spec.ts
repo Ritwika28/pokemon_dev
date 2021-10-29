@@ -25,7 +25,7 @@ describe('PokemonService', () => {
     expect(service).toBeTruthy();
   });
 
-  describe('getPokemonList', () => {
+  describe('getPokemonListDetail', () => {
     it('should call get with correct url', () => {
       service.getPokemonListDetail(1).subscribe();
       const req = httpTestingController.expectOne(
@@ -39,6 +39,15 @@ describe('PokemonService', () => {
       service.getPokemonsTotal().subscribe();
       const req = httpTestingController.expectOne(
         `${environment.baseUrl}/pokemon`
+      );
+    });
+  });
+
+  describe('getListOfPokemon', () => {
+    it('should call get with correct url', () => {
+      service.getListOfPokemon(1).subscribe();
+      const req = httpTestingController.expectOne(
+        `${environment.baseUrl}/pokemon?limit=1`
       );
     });
   });

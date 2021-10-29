@@ -3,6 +3,7 @@
     <div fxFlex="40%" fxFlex.xs="70%" fxFlex.xm="70%" class="filter-wrap">
       <mat-form-field style="width: 35%">
         <input
+          id="name-filter"
           matInput
           [formControl]="nameFilter"
           (keyup)="filterDataSource()"
@@ -12,6 +13,7 @@
       </mat-form-field>
       <mat-form-field style="width: 60%; margin-left: 10px">
         <input
+          id="ability-filter"
           matInput
           [formControl]="abilitiesFilter"
           (keyup)="filterDataSource()"
@@ -25,6 +27,7 @@
       <mat-form-field appearance="fill" style="font-size: 11px">
         <mat-label>Sort</mat-label>
         <mat-select
+          id="sort-select"
           (selectionChange)="getSelect($event)"
           [(ngModel)]="selectedValue"
         >
@@ -54,6 +57,7 @@
       *ngFor="let pokemon of obs | async"
     >
       <mat-card
+        role="group"
         class="mat-elevation-z4 pokemon-card"
         (click)="getToDetails(pokemon)"
       >
