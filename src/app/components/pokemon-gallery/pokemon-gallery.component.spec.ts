@@ -21,25 +21,6 @@ describe('PokemonGalleryComponent', () => {
   let navigateSpy: any;
   let localStore: any;
   beforeEach(async () => {
-    localStore = {
-      cardData: JSON.stringify(POKEMON_MOCKS_INDEX),
-      nameFilter: 'bul',
-      abilitiesFilter: '',
-      selectev: 'name',
-    };
-
-    const mockLocalStorage = {
-      getItem: (key: string): string => {
-        return key in localStore ? localStore[key] : null;
-      },
-      setItem: (key: string, value: string) => {
-        localStore[key] = `${value}`;
-      },
-    };
-
-    spyOn(localStorage, 'getItem').and.callFake(mockLocalStorage.getItem);
-    spyOn(localStorage, 'setItem').and.callFake(mockLocalStorage.setItem);
-
     await TestBed.configureTestingModule({
       imports: [HttpClientTestingModule, RouterTestingModule, MatCardModule],
       declarations: [PokemonGalleryComponent],
