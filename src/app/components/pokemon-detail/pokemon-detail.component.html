@@ -57,5 +57,11 @@
         {{ stats?.stat?.name }}{{ iLast ? "" : ", " }}
       </span>
     </div>
+    <div>
+      <span class="mat-colore-bold">Moves:</span>
+      <span *ngFor="let moves of pokeDetail?.moves; let iLast = last">
+        {{ moves?.move?.name }}{{ iLast ? "" : ", " }}
+      </span>
+    </div>
   </mat-card-content>
 </mat-card>

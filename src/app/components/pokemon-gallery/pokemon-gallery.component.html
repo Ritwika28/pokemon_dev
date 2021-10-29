@@ -57,6 +57,7 @@
       *ngFor="let pokemon of obs | async"
     >
       <mat-card
+        role="group"
         class="mat-elevation-z4 pokemon-card"
         (click)="getToDetails(pokemon)"
       >
